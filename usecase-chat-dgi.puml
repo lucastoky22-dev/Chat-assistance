@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+
+actor "Visiteur" as V
+actor "Contribuable" as C
+actor "Agent" as A
+actor "Administrateur" as ADM
+
+rectangle "Application de chat en temps réel (DGI)" {
+
+  V --> (Démarrer une conversation)
+  V --> (Envoyer un message)
+
+  C --> (Démarrer une conversation)
+  C --> (Envoyer un message)
+
+  A --> (S’authentifier)
+  A --> (Répondre aux messages)
+  A --> (Consulter l’historique)
+
+  ADM --> (S’authentifier)
+  ADM --> (Répondre aux messages)
+  ADM --> (Gérer les agents)
+  ADM --> (Consulter les statistiques)
+  ADM --> (Superviser les conversations)
+}
+@enduml

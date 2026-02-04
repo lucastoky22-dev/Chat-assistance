@@ -120,8 +120,6 @@ const Connexion = () =>{
                     toast.error("Mot de passe incorrect.")
                     setPasswordError(true)
                 }else setPasswordError(false)
-                
-                console.log(uxMessage)
             })
         
     } 

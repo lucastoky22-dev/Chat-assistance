@@ -120,10 +120,20 @@ const NotificationPanel = ({ data }) => {
           >
             valider
           </Button>
+          <Box
+            sx={{
+              display:"flex",
+              alignItems:"center",
+              gap:2
+            }}
+          >
+          <Typography>Marquer comme lu</Typography>
           <Checkbox sx={{
-            padding:"0px",
-
+            borderRadius:"50%",
+            width:20,
+            height:20
           }}/>
+          </Box>
         </Stack>
         
       </Box>)

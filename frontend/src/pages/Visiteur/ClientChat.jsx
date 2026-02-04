@@ -36,6 +36,7 @@ const ClientChat = () => {
     const connectedRef = useRef(false); // empêche la double connexion
     const [session, setSession] = useState("default");
     const [agent, setAgent] = useState("default");
+    const messagesEndRef = useRef(null);
     
     
     const getSession = () => { // recuperer la session actuel
@@ -130,6 +131,12 @@ const ClientChat = () => {
         });
         
     };
+    useEffect(() =>{
+      // scroll vers le bas à chaque nouveau message
+      if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    },[messages]);
     const onError = () => {
         console.log("Erreur de connexion au WebSocket");
     };
@@ -286,7 +293,8 @@ const ClientChat = () => {
             boxShadow: "0 12px 30px rgba(0,0,0,0.18)",
             margin: "auto",
             backdropFilter: "blur(12px)",
-            minHeight: "100vh",
+            //minHeight: "100vh",
+            height:"600px",
             backgroundImage: `url("/images/LOGO_DGI_OK.png")`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
@@ -357,6 +365,7 @@ const ClientChat = () => {
             {messages.map((msg, index) =>
               OwnMessage(user, msg, index)
             )}
+            <div ref={messagesEndRef} /> {/* <-- élément pour scroller à la fin */}
           </Box>
 
           {/* INPUT */}

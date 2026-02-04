@@ -130,21 +130,23 @@ const AgentChatRoom = () => {
         fetchData();
     }
 
+    const getChatHistory = async (user) =>{
+        await http.get(`/chatHistory?userMatricule=${user.matricule}`).then((res) => {
+            console.log(res + "  " + res.data);
+            setChatHistory(res.data);
+        })
+    }
+
     // Charger user une seule fois
-    useEffect(async () => {
-        await getUser();
+    useEffect(() => {
+        getUser();
         onLineUser();
-        
+        getChatHistory(user);
     }, []);
 
     // Connecter WebSocket UNE SEULE FOIS quand user est chargé
     useEffect(() => {
         if (!user) return;
-
-        getChatHistory(user).then((res)=>{
-           console.log("chatHistory = " + res);
-           setChatHistory(res);
-        })
 
         if (connectedRef.current) return; // <-- empêche la double connexion
 
@@ -163,12 +165,12 @@ const AgentChatRoom = () => {
 
         connectedRef.current = true;
 
-        // Nettoyage si composant détruit
+        /* Nettoyage si composant détruit
         return () => {
             console.log("Cleanup WebSocket");
             client.deactivate();
             connectedRef.current = false;
-        };
+        };*/
 
     }, [user]);
 
@@ -186,7 +188,7 @@ const AgentChatRoom = () => {
         setMessages(prev => [...prev, msg]); //mise a jour du state message
         console.log("messages : " + messages)
         setVisitorSession(msg.visitor.session)
-        
+        getChatHistory(user);
         setNotifValue(notifCounter+=1)
         toast.success("vous avez recu un message", {
           transition: Slide
@@ -214,14 +216,6 @@ const AgentChatRoom = () => {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
 
-        getChatHistory(user).then((res)=>{
-           console.log("chatHistory = " + res[0].email);
-           
-           setChatHistory(res[0]);
-           console.log(chatHistory)
-        }).catch((err) => {
-            console.log(err);
-        })
     }, [messages]);
 
     

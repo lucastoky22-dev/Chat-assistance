@@ -49,13 +49,8 @@ export default function Sidebar({user, historyData}) {
     const [changeName, setChangeName]   = useState(false);
     const [changeEmail, setChangeEmail]   = useState(false);
     const [changeNumber, setChangeNumber]   = useState(false);
+    const [chatHistory, setChatHistory] = useState([]);
     const [menu, setMenu] = useState();
-    const timeStamp     = historyData.dateDeCreation; 
-        const formattedTime = dayjs(timeStamp)
-          .format("HH:mm");
-    
-    const goto = useNavigate();  
-
     const fieldStyle = {
         "& .MuiOutlinedInput-root": {
                                     background: "#000",
@@ -74,14 +69,16 @@ export default function Sidebar({user, historyData}) {
                                 },
     }
 
-    const redirect = (str) => {
-        goto("/"+str)
+    
+    const goto = useNavigate();  
+    const gotoConnexion = () => {
+        goto("/connexion");
     }
     
     const disconnect = (matr) =>{
-        console.log(matr)
+        console.log("matr: " + matr)
         http.put(`/disconnect?matr=${matr}`);
-        redirect("connexion");
+        gotoConnexion();
     }
 
     const setFree = (matr) =>{
@@ -405,14 +402,15 @@ export default function Sidebar({user, historyData}) {
                     <Box
                         sx={{width:"100%", display:"flex", flexDirection:"column", gap:1}}
                     >
-                        {historyData.map((value) => 
-                            <Box
-                                key={value}
-                                sx={{width:"100%", borderRadius:3, p:1, bgcolor:"#448c8c71", display:"flex", flexDirection:"column", gap:1}}
-                            >
-                                <Typography sx={{color:"#ffffffc2", fontSize:"11px"}}>{dayjs(value.dateDeCreation).format("MM/DD/HH/mm")}</Typography>
-                                <Typography sx={{width:"100%", color:"white", fontSize:"11px"}}>{value.email}</Typography>
-                            </Box>
+                        {historyData.map((value) => (
+                                <Box
+                                    key={value}
+                                    sx={{width:"100%", borderRadius:3, p:1, bgcolor:"#448c8c71", display:"flex", flexDirection:"column", gap:1}}
+                                >
+                                    <Typography sx={{color:"#ffffffc2", fontSize:"11px"}}>{dayjs(value.dateDeCreation).format("MM/DD/HH/mm")}</Typography>
+                                    <Typography sx={{width:"100%", color:"white", fontSize:"11px"}}>{value.email}</Typography>
+                                </Box>
+                            )
                         )}
                     </Box>
                 </Box>

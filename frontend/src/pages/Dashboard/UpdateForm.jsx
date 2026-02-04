@@ -1,8 +1,9 @@
 import {Button, Box, Typography, Stack ,  Card, CardContent, TextField} from "@mui/material";
 import { useState } from "react";
 import http from '../http';
+import CloseIcon from '@mui/icons-material/Close';
 
-export function UpdateForm({ data, onSubmit, avatar }) {
+export function UpdateForm({ data, onSubmit, avatar , close}) {
   const palette = {
     light: "#a9d9de",
     main: "#91c4c6",
@@ -78,24 +79,36 @@ export function UpdateForm({ data, onSubmit, avatar }) {
         <form onSubmit={onSubmit}>
           <Stack spacing={3}>
             {/* Avatar */}
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Box sx={{ display: "flex", flexDirection:"row-reverse", justifyContent: "center" }}>
+              
+                <CloseIcon
+                  sx={{
+                    width:20,
+                    height:20,
+                    bgcolor:"rgba(234, 25, 25, 1)",
+                    color:"#fff",
+                    borderRadius:"50%"
+                  }}
+                  onClick={close}
+                />
               <Box
                 sx={{
-                  width: 100,
+                  width: "100%",
                   height: 100,
                   padding: 1,
-                  boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+                  display:"flex",
+                  alignItems:"center",
+                  justifyContent:"center"
                 }}
               >
-                <img
-                  src={avatar}
-                  alt="user"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
+                <Typography
+                  sx={{
+                    fontWeight:"bold",
+                    fontSize:"20px",
+                    color:"#1a1a1ac8"
                   }}
-                />
+                >Mettre a jour les nformaton de l'agent</Typography>
+
               </Box>
             </Box>
 
@@ -111,7 +124,7 @@ export function UpdateForm({ data, onSubmit, avatar }) {
                 },
               }}
             >
-              <TextField label="Id" size="small" value={data.id} sx={field} />
+              <TextField label="Id" size="small" disabled value={data.id} sx={field} />
 
               <TextField label="Nom" size="small" value={name} onChange={(e) => setName(e.target.value)} sx={field} />
 

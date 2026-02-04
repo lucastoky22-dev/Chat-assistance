@@ -1199,6 +1199,7 @@ const Dashboard = () => {
                                                                     data={data}
                                                                     avatar={userLogo}
                                                                     onSubmit={handleUpdate}
+                                                                    close={handleClose}
                                                                 />
                                                                 </Box>
                                                             </Box>
@@ -1211,17 +1212,15 @@ const Dashboard = () => {
                                                     maxWidth="sm"
                                                     PaperProps={{
                                                         sx: {
-                                                        borderRadius: 3,
                                                         background: `linear-gradient(135deg, ${palette.light}, #ffffff)`,
-                                                        boxShadow: "0 20px 40px rgba(0,0,0,0.25)",
+                                                        borderRadius: 3,
+                                                        boxShadow: "0 18px 40px rgba(0,0,0,0.2)",
                                                         },
                                                     }}
                                                 >
                                                     {/* HEADER AVEC ICÔNE FERMER*/}
                                                     <DialogTitle
                                                         sx={{
-                                                            //background: `linear-gradient(135deg, ${palette.main}, ${palette.dark})`,
-                                                            background:"#eaeaeaff",
                                                             display: "flex",
                                                             justifyContent: "space-between",
                                                             alignItems: "center",
@@ -1232,21 +1231,22 @@ const Dashboard = () => {
                                                             
                                                         }}
                                                     >
-                                                        <img src="images/LOGO_DGI_OK.png" width="50px" />
                                                         <Typography sx={{ 
                                                             color: "#141414ff",
                                                             fontWeight:"bold"
                                                         }}>Créer un nouveau agent</Typography>
                                                         
                                                     
-                                                        <IconButton onClick={quitCreation} sx={{ color: "#000000ff", p: 1, bgcolor:"#76aaaa"}}>
-                                                            <CloseIcon  />
+                                                        <IconButton onClick={quitCreation} sx={{ color: "#fbfbfbff", p: 1, bgcolor:"#f93030ff", width:20, height:20}}>
+                                                            <CloseIcon sx={{
+                                                                width:20, 
+                                                                height:20
+                                                            }}/>
                                                         </IconButton>
 
                                                     </DialogTitle>
                                                     <DialogContent sx={{
-                                                       // background: "linear-gradient(135deg, #3f3f3fff, #2f2f2fff)",
-                                                        backgroundColor: "#f8fcfd",
+                                                        background: `linear-gradient(135deg, ${palette.light}, #ffffff)`,
                                                         py: 4,
                                                     }}>
                                                         <form onSubmit={handleCreate}>

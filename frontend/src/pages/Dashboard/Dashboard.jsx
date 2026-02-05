@@ -82,6 +82,7 @@ import {simulatedMessages, queue} from './Simulation.js'
 const Dashboard = () => {
     
     const [messages, setMessages] = useState([]);
+    const messagesEndRef = useRef(null);
     const [input, setInput] = useState([]);
     const [visitorSession, setVisitorSession] = useState("");
     const [sidebarIndex , setSidebarIndex] = useState(0);
@@ -451,6 +452,13 @@ const Dashboard = () => {
         setNotificationTable(notifPush(dashNotif))
     }, [dashNotif]);
 
+    useEffect(() =>{
+        // scroll vers le bas à chaque nouveau message
+      if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, [messages]);
+
     const handleTab = (index) => {
         setTabIndex(index);
         //toast.info(`Vous avez sélectionné l'onglet ${index + 1}`);
@@ -479,6 +487,8 @@ const Dashboard = () => {
         "motDePasse" : "s"
     })
     const [groupInfo, setGroupInfo] = useState({});
+    
+    const [groupName, setGroupName] = useState();
     const handleOpen = (row) => {
         setData(
             {
@@ -606,6 +616,7 @@ const Dashboard = () => {
     /************************mettre a jour un groupe ************************/
     const updateGroup = (row) => {
         setGroupInfo(row)
+        setGroupName(groupInfo.nom)
         groupMemeber(row.groupId)
         setOpen(true);
     }
@@ -1467,14 +1478,16 @@ const Dashboard = () => {
                                                         <>
                                                             <IconButton
                                                                 onClick={() => updateGroup(row)}
-                                                                sx={{ padding: { xs: 0.5, sm: 1 }, color: "#ffffffd9" }}
+                                                                color="success"
+                                                                sx={{ padding: { xs: 0.5, sm: 1 } }}
                                                             >
                                                                 <UpdateIcon fontSize="small" />
                                                             </IconButton>
 
                                                             <IconButton
                                                                 onClick={() => deleteGroup(row.groupId)}
-                                                                sx={{ padding: { xs: 0.5, sm: 1 }, color: "#ffffffd9" }}
+                                                                color="error"
+                                                                sx={{ padding: { xs: 0.5, sm: 1 }}}
                                                             >
                                                                 <DeleteIcon fontSize="small" />
                                                             </IconButton>
@@ -1497,22 +1510,27 @@ const Dashboard = () => {
                                                     {/* HEADER AVEC ICÔNE FERMER */}
                                                     <DialogTitle
                                                         sx={{
-                                                            color: "#f2f2f2ff",
-                                                            bgcolor:"#261a36ff",
+                                                            backgroundColor: "#a9d9ce",
+                                                            color: "#111111ff",
                                                             display: "flex",
                                                             justifyContent: "space-between",
-                                                            alignItems: "center",
-                                                            textAlign: "center",
-                                                            fontWeight : 600
+                                                            alignItems: "center"
                                                         }}
                                                     >
                                                         Mettre a jour le groupe
                                                         {/* Icône Annuler */}
-                                                        <IconButton onClick={handleClose}>
-                                                            <CloseIcon sx={{ color: "#ecececff" }} />
-                                                        </IconButton>
+                                                        <CloseIcon onClick={quitCreation} 
+                                                            sx={{ 
+                                                                color: "#1b1b1bff", 
+                                                                borderRadius:"50%",
+                                                                "&:hover":{
+                                                                    color:"#fff",
+                                                                    bgcolor:"#f00",
+                                                                },
+                                                            }} 
+                                                        />
                                                     </DialogTitle>
-                                                    <DialogContent sx={{ backgroundColor: "#1b1b1bff" }}>
+                                                    <DialogContent sx={{ backgroundColor: "#76aaaa" }}>
                                                         <form onSubmit={saveUpdate}>
                                                             <Stack spacing={3}>
                                                                 {/* Avatar */}
@@ -1534,29 +1552,38 @@ const Dashboard = () => {
                                                                         type="text"
                                                                         size="small"
                                                                         sx={{
-                                                                            flex: "1 1 45%",
-                                                                            bgcolor: "#3939399a",
-                                                                            "& .MuiOutlinedInput-root": {
-                                                                                color: "white",
-                                                                                fontSize: "13px",
-                                                                                padding: "3px 3px",
-                                                                            },
+                                                                            flex: "1 1 45%", 
+                                                                                bgcolor:"#ffffffe9",
+                                                                                borderRadius:3,
+                                                                                border:"none",
+                                                                                "& .MuiOutlinedInput-root": {
+                                                                                    color: "#000",
+                                                                                    borderRadius:3,
+                                                                                    fontSize:"13px",
+                                                                                    padding:"3px 3px",
+                                                                                    border:"none",
+                                                                                },
                                                                         }}
                                                                     />
                                                                     <TextField
-                                                                        placeholder={groupInfo.nom}
                                                                         name="nom"
                                                                         id="nom"
                                                                         type="text"
                                                                         size="small"
+                                                                        value = {groupName}
+                                                                        onChange={(e) => setGroupName(e.target.value)}
                                                                         sx={{
-                                                                            flex: "1 1 45%",
-                                                                            bgcolor: "#3939399a",
-                                                                            "& .MuiOutlinedInput-root": {
-                                                                                color: "white",
-                                                                                fontSize: "13px",
-                                                                                padding: "3px 3px",
-                                                                            },
+                                                                            flex: "1 1 45%", 
+                                                                                bgcolor:"#ffffffe9",
+                                                                                borderRadius:3,
+                                                                                border:"none",
+                                                                                "& .MuiOutlinedInput-root": {
+                                                                                    color: "#000",
+                                                                                    borderRadius:3,
+                                                                                    fontSize:"13px",
+                                                                                    padding:"3px 3px",
+                                                                                    border:"none",
+                                                                                },
                                                                         }}
                                                                     />
                                                                     <Typography sx={{ fontWeight: "bold", color: "#ffffffd7" }}>Ajouter des membres</Typography>
@@ -1667,14 +1694,18 @@ const Dashboard = () => {
                                                     fullWidth
                                                     maxWidth="sm"
                                                     PaperProps={{
-                                                        sx: { width: "100%", margin: 0 }
+                                                        sx: { 
+                                                            width: "100%", 
+                                                            margin: 0,
+                                                            borderRadius:3
+                                                        }
                                                     }}
                                                 >
                                                     {/* HEADER AVEC ICÔNE FERMER */}
                                                     <DialogTitle
                                                         sx={{
-                                                            backgroundColor: "#282828ff",
-                                                            color: "#ecececff",
+                                                            backgroundColor: "#a9d9ce",
+                                                            color: "#111111ff",
                                                             display: "flex",
                                                             justifyContent: "space-between",
                                                             alignItems: "center"
@@ -1683,12 +1714,19 @@ const Dashboard = () => {
                                                         Nouveau groupe
 
                                                         {/* Icône Annuler */}
-                                                        <IconButton onClick={quitCreation}>
-                                                            <CloseIcon sx={{ color: "#f3f3f3ff" }} />
-                                                        </IconButton>
+                                                        <CloseIcon onClick={quitCreation} 
+                                                            sx={{ 
+                                                                color: "#1b1b1bff", 
+                                                                borderRadius:"50%",
+                                                                "&:hover":{
+                                                                    color:"#fff",
+                                                                    bgcolor:"#f00",
+                                                                },
+                                                            }} 
+                                                        />
                                                     </DialogTitle>
 
-                                                    <DialogContent sx={{ backgroundColor: "#1b1b1bff" }}>
+                                                    <DialogContent sx={{ backgroundColor: "#76aaaa" }}>
                                                         <form onSubmit={createGroup}>
                                                             <Stack spacing={3}>
                                                                 {/* Avatar */}
@@ -1701,68 +1739,55 @@ const Dashboard = () => {
                                                                        gap:2
                                                                     }}
                                                                 >
-                                                                    <TextField
-                                                                        placeholder="Nom"
-                                                                        name="nom"
-                                                                        id="nom"
-                                                                        type="text"
-                                                                        size="small"
-                                                                        sx={{ flex: "1 1 45%", 
-                                                                            bgcolor:"#3939399a",
-                                                                             "& .MuiOutlinedInput-root": {
-                                                                                color: "white",
-                                                                                fontSize:"13px",
-                                                                                padding:"3px 3px",
-                                                                            },
-                                                                        }}
-                                                                    />
-                                                                    <Typography sx={{fontWeight:"bold", color:"#ffffffd7"}}>Ajouter des membres</Typography>
-                                                            <Stack
-                                                                sx={{
-                                                                        background: "#0d0d0d92",
-                                                                        padding:2,
-                                                                        overflowX: "auto",  // scroll horizontal sur mobile
-                                                                        overflowY: "auto",
-                                                                        maxHeight: 200,
-                                                                    }}
-                                                            >
-                                                                
-                                                                <Box stickyHeader
-                                                                    sx={{
-                                                                        display:"flex",
-                                                                        justifyContent:"space-between",
-                                                                        bgColor:"#353535ff"
-                                                                    }}
-                                                                >
-                                                                 <Typography sx={{fontSize:"13px", color:"#ffffffd7"}}>Numero</Typography>
-                                                                 <Typography sx={{fontSize:"13px", color:"#ffffffd7"}}>Nom</Typography>
-                                                                 <Typography sx={{fontSize:"13px", color:"#ffffffd7"}}>Matricule</Typography>
-                                                                 <Typography sx={{fontSize:"13px", color:"#ffffffd7"}}>Selectioner</Typography>   
-                                                                </Box>
-                                                                {agentWithNoGroup.map((row) => (
                                                                     <Box
-                                                                        key={row.userId}
                                                                         sx={{
                                                                             display:"flex",
-                                                                            flex:"wrap",
-                                                                            padding:2,
-                                                                            justifyContent:"space-between",
-                                                                            borderBottom:"1px solid #58585830",
                                                                             alignItems:"center",
-                                                                            "&:hover": {
-                                                                                backgroundColor: "#58585830",
-                                                                            },
+                                                                            gap:1
                                                                         }}
                                                                     >
-                                                                        <Box sx={{fontSize:"14px", color:"#ffffffd7"}}>{row.id}</Box>
-                                                                        <Box sx={{fontSize:"14px", color:"#ffffffd7"}}>{row.nom}</Box>
-                                                                        <Box sx={{fontSize:"14px", color:"#ffffffd7"}}>{row.matricule}</Box>
-                                                                        <Box sx={{fontSize:"14px", color:"#ffffffd7"}}>
-                                                                            <input type="checkbox" name="ajouter" id="ajouter" onChange={() => addCheck(row)} />
-                                                                        </Box>
+                                                                        <Typography>Nom du groupe</Typography>
+                                                                        <TextField
+                                                                            placeholder="Nom"
+                                                                            name="nom"
+                                                                            id="nom"
+                                                                            type="text"
+                                                                            size="small"
+                                                                            sx={{ 
+                                                                                flex: "1 1 45%", 
+                                                                                bgcolor:"#ffffffe9",
+                                                                                borderRadius:3,
+                                                                                border:"none",
+                                                                                "& .MuiOutlinedInput-root": {
+                                                                                    color: "#000",
+                                                                                    borderRadius:3,
+                                                                                    fontSize:"13px",
+                                                                                    padding:"3px 3px",
+                                                                                    border:"none",
+                                                                                },
+                                                                            }}
+                                                                        />
                                                                     </Box>
-                                                                ))}</Stack>
-                                                                </Stack>
+                                                                    <Typography sx={{color:"#010101e3"}}>Ajouter des membres</Typography>
+                                                                
+                                                                    <TableBoard
+                                                                        tabHeader={[
+                                                                            { label: "ID", key: "id" },
+                                                                            { label: "Nom", key: "nom" },
+                                                                            { label: "Matricule", key: "matricule" },
+                                                                            { label: "Selectionner", key: "actions" },
+                                                                        ]}
+                                                                        data={agentWithNoGroup}
+                                                                        renderActions={(row) => (
+                                                                            <>
+                                                                                <Box sx={{fontSize:"14px", color:"#ffffffd7", display:"flex", alignItems:"center", gap:3}}>
+                                                                                    <Typography sx={{color:"#0756e9ff"}}>ajouter</Typography>
+                                                                                    <input type="checkbox" name="ajouter" id="ajouter" onChange={() => addCheck(row)} />
+                                                                                </Box>
+                                                                            </>
+                                                                        )}
+                                                                    />
+                                                            </Stack>
 
                                                                 {/* BOUTON ENREGISTRER */}
                                                                 <Box sx={{ display: "flex", justifyContent: "center"}}>
@@ -1891,51 +1916,91 @@ const Dashboard = () => {
                     {/************************************************sidebar CHATROOM*************************************************/} 
                     {sidebarIndex === 2 && (
                         <>
-                        
                         <Stack
                             sx={{
                                 display:"flex",
                                 flexDirection:"column",
                                 justifyContent:"center",
                                 alignContent:"center",
-                                my:"7%",
+                                mt:5,
                                 height:"500px",
                                 boxShadow: "0 10px 25px rgba(0, 0, 0, 0.56)",
                                 borderRadius:3
                             }}
                         >
                         
-
-                        <Button 
-                            variant="outlined" 
-                            onClick={() => endTheChat()}
+                        <Box 
                             sx={{
-                                color:"#fff",
-                                fontSize:"11px",
-                                border:"1px solid #d4131364", 
-                                bgcolor:"#d90202ff",
-                                //boxShadow: "0 10px 10px rgba(94, 30, 30, 0.42)", 
-                                width:"200px",
-                                alignSelf:"flex-end"
+                                display:"flex",
+                                justifyContent:"space-between",
+                                alignItems:"center",
+                                borderBottom:"1px solid #a9d9ce",
+                                bgcolor:"#a0c8c8ff",
+                                p:2,
                             }}
-                        >
-                            Terminer la discussion  
-                        </Button>
+                        >{/* Header */}
+                            
+                            <Box
+                                sx={{
+                                    display:"flex",
+                                    alignItems:"center",
+                                    gap:2
+                                }}
+                            >
+                                <PersonIcon
+                                    sx={{
+                                        border:"1px solid #181818ff",
+                                        borderRadius:"50%",
+                                        width:50,
+                                        height:50
+                                    }}
+                                />
+                                <Typography
+                                    sx={{
+                                        fontWeight:"bold"
+                                    }}
+                                >{user.nom}</Typography>
+                            </Box>
+                            <Button 
+                                variant="outlined" 
+                                onClick={() => endTheChat()}
+                                sx={{
+                                    color:"#131313ff",
+                                    fontSize:"11px",
+                                    background: "#f7f7f7e8",
+                                    border:"1px solid #f90c0ce2", 
+                                    //boxShadow: "0 10px 10px rgba(94, 30, 30, 0.42)", 
+                                    width:"200px",
+                                    //alignSelf:"flex-end",
+                                    "&:hover": {
+                                        color:"#fff",
+                                        background: "#d90202ff",
+                                        transform: "translateY(-1px)",
+                                        boxShadow: "0 10px 24px rgba(145,196,198,0.45)",
+                                    },
+                                }}
+                            >
+                                Terminer la discussion  
+                            </Button>
+                        </Box>
                             <Box
                                 sx={{
                                     flex: 1,
                                     p: 2,
                                     overflowY: "auto",
                                     display: "flex",
+
                                     flexDirection: "column",
                                     gap: 1.2,
                                 }}
                             >
                                 {messages.map((msg, index) => (OwnMessage(user, msg, index)))}
+                                <div ref={messagesEndRef} /> {/* <-- élément pour scroller à la fin */} 
                             </Box>
                             <Box
                                 sx={{
                                     p: 2,
+                                    bgcolor:"#fff",
                                     backdropFilter: "blur(8px)",
                                     borderTop: "1px solid rgba(145,196,198,0.2)",
                                     display:"flex",

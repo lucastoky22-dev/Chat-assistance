@@ -39,11 +39,9 @@ public interface MessageRepository extends JpaRepository<Message, Long>{
 	
 	void deleteAllByVisitor(Visitor session);
 	
-	
-	
-	@Query("""
-			delete from Message m where m.visitor = :session 
-			""")
+	@Query(value = """
+			delete from Message m where m.visitor = :session
+			""", nativeQuery = true)
 	
 	public void deleteAllMessageBySession(@Param("session") Visitor session);
 	

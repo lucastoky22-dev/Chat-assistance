@@ -46,6 +46,7 @@ const AgentChatRoom = () => {
     const messagesEndRef = useRef(null);
     const [chatHistory, setChatHistory] = useState([]);
     const [open, setOpen] = useState()
+    const [isDiscussionClose, setIsDiscussionClose] = useState(false);
        const maDtoList = [
         { matricule: "AG123", responseTime: 20 },
         { matricule: "AG124", responseTime: 45 },
@@ -240,6 +241,7 @@ const AgentChatRoom = () => {
     }
 
     const setFree = (matr) =>{
+        setIsDiscussionClose(true);
         http.put(`/makeUserAsFree?matr=${matr}&state=${"FREE"}`)
     }
 
@@ -553,6 +555,8 @@ const AgentChatRoom = () => {
                 }}
             >
                 {messages.map((msg, index) => (OwnMessage(user, msg, index)))}
+                {isDiscussionClose ? (<Box sx={{borderBottom:"1px solid #ffffff72", marginTop:2, display:"flex", justifyContent:"center"}}><Typography sx={{color:"#ffffff72"}}>discussion terminer</Typography></Box>): console.log("discussion  en cours")}
+                
                 <div ref={messagesEndRef} /> {/* <-- élément pour scroller à la fin */}
             </Box>
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -110,6 +111,7 @@ const Dashboard = () => {
     const [listDuration, setListDuration]  = useState([]);
     const [notificationData, setNotificationData] = useState({});
     const [queueData, setQueueData]        = useState([])
+    const goto = useNavigate();
 
     const statsData = {
         title: 'Total Utilisateurs',
@@ -718,6 +720,12 @@ const Dashboard = () => {
         toast.info("chat ending");
     
     }
+
+    const disconnect = (matr) =>{
+        console.log("matr: " + matr)
+        http.put(`/disconnect?matr=${matr}`);
+        goto("/connexion");
+    }
     
     const sendMessage = () => {//envoie du message par l'agent
     
@@ -890,9 +898,9 @@ const Dashboard = () => {
                     >
                         {[
                             { label: "Tables", icon: <Grid4x4Icon sx={{color:"#a9d9de"}}/> },
-                            { label: "Analytiques", icon: <AnalyticsSharpIcon sx={{color:"#a9d9de"}}/> },
+                            { label: "Statistiques", icon: <AnalyticsSharpIcon sx={{color:"#a9d9de"}}/> },
                             { label: "Chat", icon: <ChatIcon sx={{color:"#a9d9de"}}/> },
-                            { label: "Messages", icon: <AreaChartIcon sx={{color:"#a9d9de"}}/> },
+                            { label: "Robot", icon: <AreaChartIcon sx={{color:"#a9d9de"}}/> },
                             { label: "Notification", icon: <NotificationsNoneIcon sx={{color:"#a9d9de"}}/> },
                             { label: "Paramètres", icon: <SettingsIcon sx={{color:"#a9d9de"}}/> },
                             { label: "Déconnexion", icon: <PowerSettingsNewIcon sx={{color:"#a9d9de"}}/> },
@@ -980,11 +988,11 @@ const Dashboard = () => {
                                         gap: 8
                                     }}
                                 >
-                                    {["Gérer les utilisateurs", "Gérer les groupes", "Video", "Messages"].map(
+                                    {["Gérer les utilisateurs", "Gérer les groupes"].map(
                                         (label, idx) => {
                                             const bgColors = ["#a9d9de", "#a9d9de", "#a9d9de", "#a9d9de"];
-                                            //const activeColors = ["#5719d2ff", "#8219d2ff", "#c319d2ff", "#d2198eff"];
-                                            const activeColors = ["#76aaaa", "#76aaaa", "#76aaaa", "#76aaaa"];
+                                            const activeColors = ["#5719d2ff", "#8219d2ff", "#c319d2ff", "#d2198eff"];
+                                            //const activeColors = ["#76aaaa", "#76aaaa", "#76aaaa", "#76aaaa"];
                                             return (
                                                 <Button
                                                     key={idx}
@@ -1829,7 +1837,7 @@ const Dashboard = () => {
                                             fontWeight:"bold",
                                             borderBottom:"1px solid #a5a5a5be"
                                         }}>
-                                            Analytiques
+                                            Statistiques
                                 </Typography>
                                         {/********STAT CARD*******/}
                                 <Stack 
@@ -2089,6 +2097,12 @@ const Dashboard = () => {
                             }
                         </>
                     )}
+                    {sidebarIndex === 5 && (
+                        <Box>
+                            <Typography sx={{text:"center", fontWeight:"bold"}}>Settings</Typography>
+                        </Box>
+                    )} 
+                    {sidebarIndex === 6 && disconnect(user.matricule)}
                     
                 </div>
                 

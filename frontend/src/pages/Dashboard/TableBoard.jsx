@@ -27,6 +27,7 @@ export function TableBoard({ tabHeader, data, renderActions }) {
         },
         "&:hover::-webkit-scrollbar": {
           width: "6px",
+          backgroundColor:"#76aaaa"
         },
         "&::-webkit-scrollbar-thumb": {
           background: "rgba(255,255,255,0.35)",
@@ -45,12 +46,12 @@ export function TableBoard({ tabHeader, data, renderActions }) {
                   position: "sticky",
                   top: 0,
                   zIndex: 2,
-                  background: "rgba(233, 233, 233, 0.3)",
+                  background: "rgba(233, 233, 233, 0.99)",
                      //"linear-gradient(135deg, #c0d1d3ff, #edf5f8ff)",
-                  color: "#76aaaa",
+                  color: "#3c5d5dff",
                   fontWeight: 600,
                   fontSize: 12,
-                  borderBottom: "2px solid #76aaaa",
+                  borderBottom: "2px solid #76acac7e",
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
                 }}

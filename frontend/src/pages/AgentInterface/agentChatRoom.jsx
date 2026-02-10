@@ -12,21 +12,25 @@ import {
   Button,
   Avatar,
   Stack,
+  Radio,
+  outlinedInputClasses
 } from "@mui/material";
 import Sidebar from './Sidebar.jsx';
 import OwnMessage from './OwnMessage.jsx';
 import GroupIcon from "@mui/icons-material/Group";
+import ChatIcon from "@mui/icons-material/Chat";
 import Groups3Icon from "@mui/icons-material/Groups3";
 import PersonIcon from '@mui/icons-material/Person';
 import ArrowUpwardSharpIcon from '@mui/icons-material/ArrowUpwardSharp';
 import Notification from "./Notification.jsx"
 import IconButton from '@mui/material/IconButton';
 import { PopChat } from './PopChat.jsx';
+import {SwitchButton, switchValue} from '../../component/SwitchButton.jsx'
 
 import { getChatHistory } from "../../api/dashboardData.js"; 
+import { LocalConvenienceStoreOutlined } from '@mui/icons-material';
 
 const AgentChatRoom = () => {
-
     const [user, setUser] = useState(null);
     const [onLineAgent, setOnLineAgent] = useState([]);
     const [messages, setMessages] = useState([]);
@@ -47,7 +51,35 @@ const AgentChatRoom = () => {
     const [chatHistory, setChatHistory] = useState([]);
     const [open, setOpen] = useState()
     const [isDiscussionClose, setIsDiscussionClose] = useState(false);
-       const maDtoList = [
+    const [activated, setActivated] = useState(false);
+    
+    let footer = document.getElementById('footer');
+    let txtField = document.getElementById('txtField');
+    let sendButton = document.getElementById('sendButton');
+    
+    const setValue = () =>{
+        activated?setActivated(false):setActivated(true);
+    } 
+
+    useEffect(()=>{
+        console.log("value1: " + activated + " ");
+        console.log(txtField)
+        if(activated){
+            txtField.setAttribute('disabled', 'true');
+            txtField.value="le robot est activer, desactiver le pour pouvoir reécrire";
+            txtField.style.color="#d2d2d2cc";
+            sendButton.setAttribute('disabled', true);
+        }else{
+            //txtField.removeAttribute('disabled');
+            //txtField.value="";
+            //txtField.style.color="#fff";
+            //sendButton.removeAttribute('disabled');
+        }
+        
+    },[activated])
+    
+
+    const maDtoList = [
         { matricule: "AG123", responseTime: 20 },
         { matricule: "AG124", responseTime: 45 },
         { matricule: "AG125", responseTime: 75 },
@@ -138,11 +170,16 @@ const AgentChatRoom = () => {
         })
     }
 
+    const getRobotState = () =>{
+        console.log("bot activated");
+    }
+
     // Charger user une seule fois
     useEffect(() => {
         getUser();
         onLineUser();
         getChatHistory(user);
+        getRobotState();
     }, []);
 
     // Connecter WebSocket UNE SEULE FOIS quand user est chargé
@@ -286,17 +323,16 @@ const AgentChatRoom = () => {
     }
     const handleClose = () => setOpen(false);
 
- 
-
   return (
   <>
     {user != null? 
-    <Box
+    <Box 
+        id="box1"
         sx={{
             width: "100vw",
             height: "100vh",
             bgcolor: "#2d2b2dff",
-            display: "flex",
+            flexWrap:{ xs: "wrap", md:"wrap" , lg: "nowrap" },
             justifyContent: "space-between",
             alignItems: "center",
         }}
@@ -318,29 +354,33 @@ const AgentChatRoom = () => {
             sx={{
                 background:"linear-gradient(135deg, #a9d9de, #ecf2ffff)",
                 padding: 2,
-                minWidth: { xs: "100%", sm: 220 },
-                width: { xs: "100%", lg: "420px" },
+                //minWidth: { xs: "100%", sm: 220 },
+                //width: { xs: "100%", lg: "420px" },
+                width: "100%",
                 height: "100vh",
                 borderRight: "1px solid rgba(255,255,255,0.05)",
                 gap: 2,
             }}
         >
             {/* TABS */}
-                <div
-                    style={{
+                <Box
+                    sx={{
                         display: "flex",
                         flexWrap: "wrap",
-                        borderBottom: "2px solid #4545458f",
+                        backgroundColor:"#e4f8faff",
+                        borderRadius:3,
+                        borderBottom: "1px solid #4545458f",
                         justifyContent:"space-between",
                         padding:2,
                         alignItems:"center",
                         //gap: 9
                     }}
                 >
+                    Interface agent fiscale
                     {["profil", "En ligne", "Groupes", "Messages"].map(
                         (label, idx) => {
                             const bgColors = ["#5719d2ff", "#2196f3", "#43a047", "#ff7043"];
-                            const icon = [<PersonIcon/>, <GroupIcon/>, <Groups3Icon/>, Notification(notifValue)] ;
+                            const icon = [<PersonIcon/>, <GroupIcon/>, <ChatIcon/>, Notification(notifValue)] ;
                             //const activeColors = ["#5719d2ff", "#8219d2ff", "#c319d2ff", "#d2198eff"];
                             const activeColors = ["#989fa43d", "#989fa43d", "#989fa43d", "#989fa43d"];
                             return (
@@ -349,14 +389,14 @@ const AgentChatRoom = () => {
                                     onClick={() => handleTab(idx)}
                                     variant="outlined"
                                     sx={{
-                                        width: 36,
                                         height: 36,
                                         borderRadius: 2,
-                                        color: "#76aaaa",
-                                        background: tabIndex === idx ? "#161616f2" : "transparent",
+                                        color: "#141414ffff",
+                                        background: tabIndex === idx ? "#a3dcdcff" : "transparent",
                                         transition: "all .2s ease",
                                         "&:hover": {
-                                            background: "#252525e4",
+                                            background: "#76aaaa",
+                                            color: "#fff",
                                         },
                                     }}
                                 >
@@ -367,11 +407,12 @@ const AgentChatRoom = () => {
                         }
                     )}    
                     
-                </div>
+                </Box>
 
                 {tabIndex === 0 && (
                     <>
                         <Sidebar
+
                             user={user}
                             historyData={chatHistory}
                         />
@@ -478,9 +519,153 @@ const AgentChatRoom = () => {
                     )
                 }
                 {tabIndex === 2 && (
-                        <>
-                            <div>tab 3 </div>
-                        </>
+                          <Paper //chatRoom
+                              elevation={4}
+                              sx={{
+                                  width: "100%",
+                                  height: "100vh",
+                                  bgcolor: "#000",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  overflow: "hidden",
+                                  borderRadius:3,
+                                  boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
+                                  fontFamily: "Inter, sans-serif",
+
+                              }}
+                          >
+
+                              <Box
+                                  sx={{
+                                      p: 2,
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      background: "rgba(0,0,0,0.85)",
+                                      backdropFilter: "blur(10px)",
+                                      borderBottom: "1px solid rgba(145,196,198,0.25)",
+                                  }}
+                              >
+
+                                  <Box sx={{ color: "#fff", fontWeight: 600, fontSize: 14 }}>
+                                      Discussion en cours
+                                  </Box>
+                                  <Box
+                                      sx={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          gap: 2
+                                      }}
+                                  >
+                                      <Typography
+                                          sx={{ color: "#fff", fontWeight: 600, fontSize: 14 }}
+                                      >
+                                          assistance robot
+                                      </Typography>
+                                      <SwitchButton id="switch" value={activated} setValue={setValue} />
+                                  </Box>
+                                  <Button
+                                      size="small"
+                                      variant="outlined"
+                                      onClick={() => setFree(user.matricule)}
+                                      sx={{
+                                          color: "#ff6b6b",
+                                          borderColor: "rgba(255,107,107,0.5)",
+                                          fontSize: 14,
+                                          fontWeight: 600,
+                                          textTransform: "none",
+                                          "&:hover": {
+                                              background: "rgba(255,107,107,0.08)",
+                                              borderColor: "#ff6b6b",
+                                          }
+                                      }}
+                                  >
+                                      terminer la discussion
+                                  </Button>
+
+                              </Box>
+
+                              <Box //champ de discussion
+                                  sx={{
+                                      flex: 1,
+                                      p: 2,
+                                      overflowY: "auto",
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      gap: 1.2,
+                                      background: "rgba(29, 28, 28, 0.85)",
+                                  }}
+                              >
+                                  {messages.map((msg, index) => (OwnMessage(user, msg, index)))}
+                                  {isDiscussionClose ? (<Box sx={{ borderBottom: "1px solid #ffffff72", marginTop: 2, display: "flex", justifyContent: "center" }}><Typography sx={{ color: "#ffffff72" }}>discussion terminer</Typography></Box>) : console.log("discussion  en cours")}
+
+                                  <div ref={messagesEndRef} />
+                              </Box>
+
+                              <Box
+                                  id="footer"
+                                  sx={{
+                                      p: 2,
+                                      bgcolor: "rgba(29, 28, 28, 0.85)",
+                                      backdropFilter: "blur(8px)",
+                                      borderTop: "1px solid rgba(145,196,198,0.2)",
+                                  }}
+                              >
+                                  <Stack direction="row" spacing={1} sx={{
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                  }}>
+                                      <TextField
+                                          id="txtField"
+                                          variant="outlined"
+                                          placeholder="Écris ton message…"
+                                          value={input}
+                                          onChange={(e) => setInput(e.target.value)}
+                                          sx={{
+                                              "& .MuiOutlinedInput-root": {
+                                                  background: "#000",
+                                                  color: "#fff",
+                                                  fontSize: 14,
+                                                  borderRadius: 2,
+                                                  width: "500px",
+                                                  overflowY: "auto",
+                                                  "& fieldset": {
+                                                      borderColor: "rgba(145,196,198,0.3)",
+                                                  },
+                                                  "&:hover fieldset": {
+                                                      borderColor: "#91c4c6",
+                                                  },
+                                                  "&.Mui-focused fieldset": {
+                                                      borderColor: "#91c4c6",
+                                                  },
+                                              },
+                                          }}
+                                      />
+
+                                      <IconButton
+                                          id="sendButton"
+                                          variant="contained"
+                                          sx={{
+                                              width: 48,
+                                              height: 48,
+                                              borderRadius: "14px",
+                                              background: "#91c4c6",
+                                              boxShadow: "0 8px 20px rgba(145,196,198,0.35)",
+                                              "&:hover": {
+                                                  background: "#7fb3b5",
+                                                  transform: "translateY(-1px)",
+                                                  boxShadow: "0 10px 24px rgba(145,196,198,0.45)",
+                                              },
+                                          }}
+                                          onClick={() => { sendMessage(); }}
+                                      >
+                                          <ArrowUpwardSharpIcon sx={{
+                                              color: "white",
+                                          }} />
+                                      </IconButton>
+                                  </Stack>
+                              </Box>
+                          </Paper>
                     )
                 }
                 {tabIndex === 3 && (
@@ -492,134 +677,7 @@ const AgentChatRoom = () => {
 
         </Stack>
 
-        <Paper //chatRoom
-            elevation={4}
-            sx={{
-                width: "100%",
-                height: "100vh",
-                bgcolor: "#000",
-                display: "flex",
-                flexDirection: "column",
-                overflow: "hidden",
-                //boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
-                fontFamily: "Inter, sans-serif",
-                
-            }}
-        >
-
-            <Box
-                sx={{
-                    p: 2,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    background: "rgba(0,0,0,0.85)",
-                    backdropFilter: "blur(10px)",
-                    borderBottom: "1px solid rgba(145,196,198,0.25)",
-                }}
-            >
-                {/* Titre */}
-                <Box sx={{ color: "#fff", fontWeight: 600, fontSize: 14 }}>
-                    Discussion en cours
-                </Box>
-                    <Button
-                              size="small"
-                              variant="outlined"
-                              onClick={() => setFree(user.matricule)}
-                              sx={{
-                                  color: "#ff6b6b",
-                                  borderColor: "rgba(255,107,107,0.5)",
-                                  fontSize: 11,
-                                  fontWeight: 600,
-                                  textTransform: "none",
-                                  "&:hover": {
-                                      background: "rgba(255,107,107,0.08)",
-                                      borderColor: "#ff6b6b",
-                                  }
-                              }}
-                    >
-                        terminer la discussion
-                    </Button>
-
-            </Box>
-
-            <Box //champ de discussion
-                sx={{
-                    flex: 1,
-                    p: 2,
-                    overflowY: "auto",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 1.2,
-                    background:"rgba(29, 28, 28, 0.85)",
-                }}
-            >
-                {messages.map((msg, index) => (OwnMessage(user, msg, index)))}
-                {isDiscussionClose ? (<Box sx={{borderBottom:"1px solid #ffffff72", marginTop:2, display:"flex", justifyContent:"center"}}><Typography sx={{color:"#ffffff72"}}>discussion terminer</Typography></Box>): console.log("discussion  en cours")}
-                
-                <div ref={messagesEndRef} /> {/* <-- élément pour scroller à la fin */}
-            </Box>
-
-            <Box
-                sx={{
-                    p: 2,
-                    bgcolor: "rgba(29, 28, 28, 0.85)",
-                    backdropFilter: "blur(8px)",
-                    borderTop: "1px solid rgba(145,196,198,0.2)",
-                }}
-            >
-                <Stack direction="row" spacing={1} sx={{
-                    alignItems:"center",
-                    justifyContent:"center",
-                }}> 
-                    <TextField
-                        variant="outlined"
-                        placeholder="Écris ton message…"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                background: "#000",
-                                color: "#fff",
-                                borderRadius: 2,
-                                width: "400px",
-                                overflowY:"auto",
-                                "& fieldset": {
-                                    borderColor: "rgba(145,196,198,0.3)",
-                                },
-                                "&:hover fieldset": {
-                                    borderColor: "#91c4c6",
-                                },
-                                "&.Mui-focused fieldset": {
-                                    borderColor: "#91c4c6",
-                                },
-                            },
-                        }}
-                    />
-
-                    <IconButton
-                            variant="contained"
-                            sx={{
-                                width: 48,
-                                height: 48,
-                                borderRadius: "14px",
-                                background: "#91c4c6",
-                                boxShadow: "0 8px 20px rgba(145,196,198,0.35)",
-                                "&:hover": {
-                                    background: "#7fb3b5",
-                                    transform: "translateY(-1px)",
-                                    boxShadow: "0 10px 24px rgba(145,196,198,0.45)",
-                                },
-                        }}
-                        onClick={() => {sendMessage();}}
-                    >
-                        <ArrowUpwardSharpIcon sx={{
-                            color:"white",
-                        }}/>
-                    </IconButton>
-                </Stack>
-            </Box>
-        </Paper>
+        
     </Box> :  <Box sx={{
         display:"flex",
         justifyContent:"center",

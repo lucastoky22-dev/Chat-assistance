@@ -4,17 +4,26 @@ const  validateMatricule = /\d{6,}/;
 let matricule = "53743,6";
 let password = "123";
 console.log("isValidMatricule : " + validateMatricule.test(matricule));*/
-
+/*
 let p = 0;
 
 
-/*function callHimself(){
+function callHimself(){
   console.log("recursive function call n°" + p++);
   callHimself();
 }
 
-callHimself();*/
+callHimself();
 
 while(true){
   console.log("recursive function call n°" + p++);
 }
+*/
+
+function doubleReturnTest(){
+  let a = 1;
+  let b = 2;
+  return [a, b];
+}
+
+console.log(doubleReturnTest())

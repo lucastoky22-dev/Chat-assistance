@@ -231,9 +231,20 @@ const ClientChat = () => {
             </Box>
               <Typography sx={{ 
                   color: "#141414ff",
-                  fontWeight:"bold"
-              }}>Entrer votre adresse email</Typography>
-
+                  fontSize:14
+              }}>Bienvenu sur la platefrome de messagerie de la DGI.
+                 Une plateforme d'assistance et d'aide sur l'administration fiscale, en vue d'accompagner 
+                 les contribuables ainsi que les simples gens qui désire se renseigner sur la fiscalité a 
+                 Madagascar.<br/>
+                 <span
+                  style={{
+                    fontWeight:"bold"
+                  }}
+                 >
+                  Veuillez saisir votre adresse email pour continuer.
+                 </span>
+              </Typography>
+              
           </DialogTitle>
           <DialogContent>
               <form action="" onSubmit={(e) => submit(e)}>

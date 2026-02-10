@@ -28,6 +28,7 @@ const itemStyle = {
     gap: 1.5,
     px: 2,
     py: 1.3,
+    mb:10,
     borderRadius: 2,
     cursor: "pointer",
     color: "#fff",
@@ -128,50 +129,81 @@ export default function Sidebar({user, historyData}) {
             spacing={1}
             sx={{
                 width: "100%",
-                height: "100vh",
-                p: 2,
-                bgcolor: "#000",
+                height:"100vh",
+                //p: 2,
+                background:"linear-gradient(135deg, #a9d9de, #ecf2ffff)",
                 boxShadow: "0 6px 14px rgba(0, 0, 0, 0.7)",
                 borderRadius:3,
                 borderRight: "1px solid rgba(145,196,198,0.15)",
             }}
         >
-            {/* Header */}
-            <Typography
+            
+            <Box
                 sx={{
-                    mb: 2,
-                    fontWeight: 700,
-                    fontSize: 16,
-                    color: "#91c4c6",
+                    display:"flex",
+                    height:"100%",
                 }}
             >
-                Mon espace
-            </Typography>
-            {["Information personnelle", "Historiques", "Rapport"].map(
-                (label, idx) => {
-                    const bgColors = ["#5719d2ff", "#2196f3", "#43a047", "#ff7043"];
-                    const icon = [<PersonIcon fontSize='small' />, <HistoryIcon fontSize="small" />, <AssessmentIcon fontSize="small" />];
-                    const activeColors = ["#989fa43d", "#989fa43d", "#989fa43d", "#989fa43d"];
-                    return (
-                         <Box  
-                            key={idx}
-                            onClick={() => handleMenu(idx)}
-                            variant="outlined" sx={itemStyle}
-                        >
-                            {icon[idx]}
-                            {label}
-                        </Box>
-                    );
-                }
-            )}    
+                <Box
+                    sx={{
+                        display:"flex",
+                        flexDirection:"column",
+                        background:"linear-gradient(135deg, #141414ff, #183f45ff)",
+                        borderRadius:3,
+                        p:2,
+                        justifyContent: { xs: "center", md: "center" },
+                        mr:2
+                    }}
+                >
+                    {["Information personnelle", "Historiques", "Rapport"].map(
+                        (label, idx) => {
+                            const bgColors = ["#5719d2ff", "#2196f3", "#43a047", "#ff7043"];
+                            const icon = [  <PersonIcon fontSize='small' />, 
+                                            <HistoryIcon fontSize="small" />, 
+                                            <AssessmentIcon fontSize="small" />
+                                            ];
+                            const activeColors = ["#989fa43d", "#989fa43d", "#989fa43d", "#989fa43d"];
+                            return (
+                                <Box
+                                    key={idx}
+                                    onClick={() => handleMenu(idx)}
+                                    variant="outlined" sx={itemStyle}
+                                >
+                                    {icon[idx]}
+                                    {label}
+                                </Box>
+                            );
+                        }
+                    )}
+                    <Button
+                        startIcon={<LogoutIcon />}
+                        variant="outlined"
+                        onClick={() => disconnect(user.matricule)}
+                        sx={{
+                            color: "#ff6b6b",
+                            borderColor: "rgba(255,107,107,0.5)",
+                            textTransform: "none",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            borderRadius: 2,
+                            "&:hover": {
+                                background: "rgba(255,107,107,0.08)",
+                                borderColor: "#ff6b6b",
+                            },
+                        }}
+                    >
+                        Déconnexion
+                    </Button>
+                </Box>
+                
 
-            <Box sx={{ flexGrow: 1 }} />
+                <Box sx={{ flexGrow: 1 }} />
 
-            {menu === 0 && (
+                {menu === 0 && (
                     <Box
                         sx={{
                             width: "100%",
-                            background:"#262626ff",
+                            background:"linear-gradient(135deg, #141414ff, #183f45ff)",
                             border: "1px solid #71717173",
                             borderRadius: 3,
                             p: 2,
@@ -190,9 +222,9 @@ export default function Sidebar({user, historyData}) {
                                     height: 70,
                                     borderRadius: "50%",
                                     border: "1px solid rgba(231, 231, 231, 0.9)",
-                                    boxShadow:"0px 0px 10px 5px rgba(5, 65, 77, 0.79)",
+                                    boxShadow: "0px 0px 10px 5px rgba(5, 65, 77, 0.79)",
                                     padding: 2,
-                                    mb:1
+                                    mb: 1
 
                                 }}
                             />
@@ -204,8 +236,8 @@ export default function Sidebar({user, historyData}) {
                                     height: "100%",
                                     gap: 2,
                                     borderRadius: 3,
-                                    display:"flex",
-                                    alignItems:"center"
+                                    display: "flex",
+                                    alignItems: "center"
                                 }}
                             >
 
@@ -215,17 +247,17 @@ export default function Sidebar({user, historyData}) {
                                 >
                                     {name}
                                 </Typography>
-                                
-                                    <Typography
-                                        sx={{
-                                            color: "white",
-                                            cursor: "pointer",
-                                        }}
-                                        onDoubleClick={() => handleEmail(email)}
-                                    >
-                                        {email}
-                                    </Typography>
-                               
+
+                                <Typography
+                                    sx={{
+                                        color: "white",
+                                        cursor: "pointer",
+                                    }}
+                                    onDoubleClick={() => handleEmail(email)}
+                                >
+                                    {email}
+                                </Typography>
+
                                 <Typography
                                     sx={{ color: "white", cursor: "pointer" }}
                                     onDoubleClick={() => handleNumber(number)}
@@ -239,10 +271,10 @@ export default function Sidebar({user, historyData}) {
                                     type='submit'
                                     sx={{
                                         color: "#000",
-                                        fontSize:11,
-                                        fontWeight:"bold",
+                                        fontSize: 11,
+                                        fontWeight: "bold",
                                         borderRadius: 3,
-                                        p:1,
+                                        p: 1,
                                         //boxShadow:"0 10px 10px rgba(3, 47, 56, 0.79)",
                                         backgroundColor: "#76aaaa",
                                     }}
@@ -387,58 +419,55 @@ export default function Sidebar({user, historyData}) {
                         </form>
 
                     </Box>
-            )}
-            {menu === 1 && (
-                
-                <>
-                <Box sx={{
+                )}
+                {menu === 1 && (
+
+                    <>
+                        <Box sx={{
                             width: "100%",
-                            background:"#262626ff",
+                            background:"linear-gradient(135deg, #141414ff, #183f45ff)",
                             border: "1px solid #71717173",
                             borderRadius: 3,
                             p: 1,
                         }}>
-                    <Typography sx={{color:"white"}}>Historiques</Typography>
-                    <Box
-                        sx={{width:"100%", display:"flex", flexDirection:"column", gap:1}}
-                    >
-                        {historyData.map((value) => (
-                                <Box
-                                    key={value}
-                                    sx={{width:"100%", borderRadius:3, p:1, bgcolor:"#448c8c71", display:"flex", flexDirection:"column", gap:1}}
-                                >
-                                    <Typography sx={{color:"#ffffffc2", fontSize:"11px"}}>{dayjs(value.dateDeCreation).format("MM/DD/HH/mm")}</Typography>
-                                    <Typography sx={{width:"100%", color:"white", fontSize:"11px"}}>{value.email}</Typography>
-                                </Box>
-                            )
-                        )}
-                    </Box>
-                </Box>
-                </>
-            )}
+                            <Typography sx={{ color: "white", mb:2 }}>Historiques</Typography>
+                            <Stack
+                                sx={{ width: "100%", gap: 1 }}
+                            >
+                                {historyData.map((value) => (
+                                    <Box
+                                        key={value}
+                                        sx={{ 
+                                            p: 1.5,
+                                            borderRadius: 2,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            width: "100%", 
+                                            gap: 1.5,
+                                            cursor: "pointer",
+                                            background: "rgba(192, 192, 192, 0.16)",
+                                            border: "1px solid rgba(145,196,198,0.15)",
+                                            transition: "all 0.2s ease",
+                                            flexDirection: "column", 
+                                            "&:hover":{
+                                                background: "rgba(145,196,198,0.15)",
+                                                transform: "translateY(-1px)",
+                                                boxShadow: "0 4px 14px rgba(0,0,0,0.35)"
+                                            }
+                                        }}
+                                    >
+                                        <Typography sx={{ color: "#ffffffc2", fontSize: "11px" }}>{dayjs(value.dateDeCreation).format("MM/DD/HH/mm")}</Typography>
+                                        <Typography sx={{ width: "100%", color: "white", fontSize: "11px" }}>{value.email}</Typography>
+                                        <Typography sx={{ width: "100%", color: "white", fontSize: "11px" }}>theme :</Typography>
+                                    </Box>
+                                )
+                                )}
+                            </Stack>
+                        </Box>
+                    </>
+                )}
+            </Box>
 
-            
-
-            {/* Déconnexion */}
-            <Button
-                startIcon={<LogoutIcon />}
-                variant="outlined"
-                onClick={() => disconnect(user.matricule)}
-                sx={{
-                    color: "#ff6b6b",
-                    borderColor: "rgba(255,107,107,0.5)",
-                    textTransform: "none",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    borderRadius: 2,
-                    "&:hover": {
-                        background: "rgba(255,107,107,0.08)",
-                        borderColor: "#ff6b6b",
-                    },
-                }}
-            >
-                Déconnexion
-            </Button>
         </Stack>
     );
 }
